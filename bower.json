@@ -1,0 +1,22 @@
+{
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/colehaus/purescript-unique-lists.git"
+  },
+  "name": "purescript-unique-lists",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^3.2.0",
+    "purescript-sets": "^3.1.0",
+    "purescript-lists": "4.12.0"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^3.0.0"
+  }
+}
