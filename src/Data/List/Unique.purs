@@ -16,7 +16,8 @@ import Data.Set as Set
 import Data.Traversable as Traversable
 import Data.Tuple (Tuple(..))
 import Data.Unfoldable (class Unfoldable)
-import Partial.Unsafe (unsafePartialBecause)
+import Partial (crashWith)
+import Partial.Unsafe (unsafePartial)
 
 import Data.List.Unique.Internal (List(..))
 import Data.List.Unique.Internal (List, unwrap) as ForReExport
@@ -55,7 +56,7 @@ unsafeMapBecause ::
   -> (a -> b)
   -> List a
   -> List b
-unsafeMapBecause s f l = unsafePartialBecause s $ fromRight $ map f l
+unsafeMapBecause s f l = unsafePartial $ fromRightNoted s $ map f l
 
 traverse ::
   forall a b m.
@@ -74,9 +75,13 @@ unsafeTraverseBecause ::
   -> (a -> m b)
   -> List a
   -> m (List b)
-unsafeTraverseBecause s f l = fromRightNoted <$> traverse f l
-  where
-    fromRightNoted x = unsafePartialBecause s $ fromRight x
+unsafeTraverseBecause s f l = unsafePartial $ fromRightNoted s <$> traverse f l
+
+fromRightNoted :: forall r l . Partial => String -> Either r l -> l
+fromRightNoted s =
+  case _ of
+      Left _ -> crashWith s
+      Right x -> x
 
 head :: forall b. Ord b => List b -> Maybe b
 head = (<$>) (\r -> r.head) <<< uncons
